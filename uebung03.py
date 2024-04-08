@@ -7,6 +7,9 @@ class Point:
         self.x = x
         self.y = y
 
+    def __str__(self):
+        return f"({str(self.x)} ; {str(self.y)})"
+
 #Figur --------------------------------------------
 class Figur:
     def __init__(self, name):
@@ -50,7 +53,7 @@ class Dreieck(Figur):
         return ab + bc + ca
 
     def __str__(self):
-        return f"{self.name} {self.a}, {self.b}, {self.c}"
+        return f"{self.name} ({self.a}, {self.b}, {self.c})"
 
 #Rechteck --------------------------------------------
 class Rechteck(Figur):
@@ -68,7 +71,7 @@ class Rechteck(Figur):
 #Polygone --------------------------------------------
 class Polygon(Figur):
     def __init__(self, punkte):
-        super().__init__("Rechteck")
+        super().__init__("Polygon")
         self.punkte = punkte
         
     def umfang(self):
