@@ -1,5 +1,6 @@
 #uebung04
 import sys
+import csv
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
@@ -15,36 +16,36 @@ class MyWindow(QMainWindow):
 
         # Widget-Instanzen erstellen:
         vornameLabel1 = QLabel("Vorname:")
-        vornameLine1 = QLineEdit()
+        self.vornameLine1 = QLineEdit()
         nameLabel2 = QLabel("Name:")
-        nameLine2 = QLineEdit()
+        self.nameLine2 = QLineEdit()
         gebLabel3 = QLabel("Geburtstag:")
-        gebLine3 = QDateEdit()
+        self.gebLine3 = QDateEdit()
         adrLabel4 = QLabel("Adresse:")
-        adrLine4 = QLineEdit()
+        self.adrLine4 = QLineEdit()
         plzLabel5 = QLabel("Postleitzahl:")
-        plzLine5 = QLineEdit()
+        self.plzLine5 = QLineEdit()
         ortLabel6 = QLabel("Ort:")
-        ortLine6 = QLineEdit()
+        self.ortLine6 = QLineEdit()
         landLabel7 = QLabel("Land:")
-        landLine7 = QComboBox()
+        self.landLine7 = QComboBox()
         button = QPushButton("Save")
 
         # Widgets mit Grid-Koordinaten dem Layout hinzufügen
         layout.addWidget(vornameLabel1, 0, 0)
-        layout.addWidget(vornameLine1, 0, 1)
+        layout.addWidget(self.vornameLine1, 0, 1)
         layout.addWidget(nameLabel2, 1, 0)
-        layout.addWidget(nameLine2, 1, 1)
+        layout.addWidget(self.nameLine2, 1, 1)
         layout.addWidget(gebLabel3, 2, 0)
-        layout.addWidget(gebLine3, 2, 1)
+        layout.addWidget(self.gebLine3, 2, 1)
         layout.addWidget(adrLabel4, 3, 0)
-        layout.addWidget(adrLine4, 3, 1)
+        layout.addWidget(self.adrLine4, 3, 1)
         layout.addWidget(plzLabel5, 4, 0)
-        layout.addWidget(plzLine5, 4, 1)
+        layout.addWidget(self.plzLine5, 4, 1)
         layout.addWidget(ortLabel6, 5, 0)
-        layout.addWidget(ortLine6, 5, 1)
+        layout.addWidget(self.ortLine6, 5, 1)
         layout.addWidget(landLabel7, 6, 0)
-        layout.addWidget(landLine7, 6, 1)
+        layout.addWidget(self.landLine7, 6, 1)
         layout.addWidget(button, 7, 1)
 
         # Zentrales Widget erstellen und layout hinzufügen
@@ -52,13 +53,15 @@ class MyWindow(QMainWindow):
         center.setLayout(layout)
 
         # Länderauswahl hinzufügen
-        landLine7.addItems(["Schweiz", "Deutschland", "Österreich"])
+        self.landLine7.addItems(["Schweiz", "Deutschland", "Österreich"])
 
         #Menu erstellen
         menubar = self.menuBar()
         filemenu = menubar.addMenu("File")
         save = QAction("Save", self)
+        save.triggered.connect(self.menu_save)
         quit = QAction("Quit", self)
+        save.triggered.connect(self.menu_quit)
         filemenu.addAction(save)
         filemenu.addAction(quit)
 
@@ -78,16 +81,25 @@ class MyWindow(QMainWindow):
         print("Menu Quit wurde gewählt...")
         self.close()
 
-    #Datei wird gespeicheicht mit Button
+    def menu_save(self):
+            self.button_clicked()
+
+    #Datei wird gespeicheicht mit Buttondruck
     def button_clicked(self):
-        self.lineEdits = {}
         data = []
-        for key, lineEdit in self.lineEdits.items():
-            data.append(lineEdit.text())
-            data.append(self.gebLine3.currentText())
-            data.append(self.comboBox.currentText())
-        with open('output.txt', 'w') as file:
-            file.write(','.join(data))
+        data.append(self.vornameLine1.text())
+        data.append(self.nameLine2.text())
+        data.append(self.gebLine3.text())
+        data.append(self.adrLine4.text())
+        data.append(self.plzLine5.text())
+        data.append(self.ortLine6.text())
+        data.append(self.landLine7.currentText())
+
+        file = open("output.txt", "w", encoding="utf-8")
+        writer = csv.writer(file, delimiter=",", lineterminator="\n")
+        writer.writerow(data)
+        file.close()
+
         print("Die Datei wurde gesichert")
 
 
