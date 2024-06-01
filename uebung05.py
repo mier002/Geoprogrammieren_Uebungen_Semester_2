@@ -89,20 +89,21 @@ class Fenster(QMainWindow):
         link = f"https://www.google.ch/maps/place/{encoding}"
         QDesktopServices.openUrl(QUrl(link))
 
-    def laden(self):
-        filename, _ = QFileDialog.getOpenFileName(self, "Datei laden", "", "Alle Dateien (.)")
-        if filename:
-            with open(filename, 'r') as file:
-                data = file.read().split(',')
-                self.vorname.setText(data[0])
-                self.nachname.setText(data[1])
-                self.bday.setDate(QDate.fromString(data[2], "dd/MM/yyyy"))
-                self.adr.setText(data[3])
-                self.plz.setText(data[4])
-                self.ort.setText(data[5])
-                index = self.land.findText(data[6])
-                if index >= 0:
-                    self.land.setCurrentIndex(index)
+        address = self.findChild(QLineEdit, "Adresse").text()
+        plz = self.findChild(QLineEdit, "PLZ").text()
+        ort = self.findChild(QLineEdit, "Ort").text()
+        land = self.findChild(QComboBox, "Land").currentText()
+
+        # URL für Google Maps zusammensetzen
+        encoded_address = urllib.parse.quote(address)
+        encoded_plz = urllib.parse.quote(plz)
+        encoded_ort = urllib.parse.quote(ort)
+        encoded_land = urllib.parse.quote(land)
+
+        url = f"https://www.google.com/maps/place/{encoded_address}+{encoded_plz}+{encoded_ort}+{encoded_land}"
+
+        # Google Maps im Standard-Webbrowser öffnen
+        QDesktopServices.openUrl(QUrl(url))
 
 def main():
     app = QApplication(sys.argv)
